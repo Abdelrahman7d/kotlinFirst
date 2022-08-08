@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity(),ActivityInitializer<ActivityMainBinding
 
     lateinit var binding : ActivityMainBinding
 
+    //hi repo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
