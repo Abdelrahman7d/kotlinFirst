@@ -14,7 +14,6 @@ import com.jsla.kotlinfirst.ui.MeetingsActivity.MeetingsActivity
 class MainActivity : AppCompatActivity(),ActivityInitializer<ActivityMainBinding>{
 
     lateinit var binding : ActivityMainBinding
-
     //hi repo
     //hello
     override fun onCreate(savedInstanceState: Bundle?) {
