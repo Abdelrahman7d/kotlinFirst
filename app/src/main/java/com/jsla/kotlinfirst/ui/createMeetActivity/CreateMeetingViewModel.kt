@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.util.Log
+import android.widget.Toast
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,59 +22,13 @@ class CreateMeetingViewModel : ViewModel() {
     var time = ObservableField<String>("Meeting time")
     var duration = ObservableField<String>("")
 
-
-    val mutableLiveData : MutableLiveData<ArrayList<MeetingInfo>> = MutableLiveData()
-
-    fun setValue() {
-
-        mutableLiveData.value = getMeetings()
-    }
-
-    private fun getMeetings(): ArrayList<MeetingInfo>? {
-
-        val cursor = DBHelper(context,null).MeetingsDBHelper().getMeetings()
-
-        val meetings = ArrayList<MeetingInfo>()
-
-        if (!cursor!!.moveToFirst()){
-            cursor.close()
-            return meetings
-        }
-
-        meetings.add(getMeeting(cursor))
-
-        while (cursor!!.moveToNext()){
-            meetings.add(getMeeting(cursor))
-        }
-        cursor.close()
-        return meetings
-    }
-
-    @SuppressLint("Range")
-    private fun getMeeting(cursor: Cursor): MeetingInfo {
-
-        val id = cursor.getString(cursor.getColumnIndex(DBHelper.MEETING_ID_COL)).toLong()
-        val title = cursor.getString(cursor.getColumnIndex(DBHelper.MEETING_TITLE_COl))
-        val location = cursor.getString(cursor.getColumnIndex(DBHelper.MEETING_LOCATION_COl))
-        val date = cursor.getString(cursor.getColumnIndex(DBHelper.MEETING_DATE_COl))
-        val timeStart = cursor.getString(cursor.getColumnIndex(DBHelper.MEETING_TIME_START_COl)).toInt()
-        val duration = 2
-        val timeEnd = (timeStart + duration).toString()
-
-        val meetingInfo  = MeetingInfo(
-            id,
-            title,
-            location,
-            date,
-            timeStart.toString(),
-            timeEnd,
-            ArrayList()
-        )
-
-        return meetingInfo
-    }
-
     fun createMeeting(){
+
+        if(!isCorrectInput()){
+
+            Toast.makeText(context,"Please input all required fields!", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         val db : DBHelper = DBHelper(context,null)
 
@@ -89,9 +44,11 @@ class CreateMeetingViewModel : ViewModel() {
                 attendees)
         )
         db.close()
+
+        clearFields()
+
+        Toast.makeText(context,"Meeting was added successfully",Toast.LENGTH_SHORT).show()
     }
-
-
 
     fun setMyContext(context : Context){
         this.context = context
@@ -103,5 +60,24 @@ class CreateMeetingViewModel : ViewModel() {
 
     fun clearAttendees(){
         attendees.clear()
+    }
+
+    fun clearFields() {
+
+        title.set("")
+        loction.set("")
+        date.set("Meeting date")
+        time.set("Meeting time")
+        duration.set("")
+        clearAttendees()
+    }
+
+    private fun isCorrectInput(): Boolean {
+
+        return !( title.get()!!.isEmpty()
+                || loction.get()!!.isEmpty()
+                || date.get()!! == "Meeting date"
+                || time.get()!! == "Meeting time"
+                || duration.get()!!.isEmpty())
     }
 }

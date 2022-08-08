@@ -122,6 +122,7 @@
             android:text="Create meeting"
             android:textAllCaps="false"
             android:textSize="16sp"
+            android:onClick="@{()-> meetingViewModel.createMeeting()}"
             android:textColor="@color/blue"
             android:backgroundTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"

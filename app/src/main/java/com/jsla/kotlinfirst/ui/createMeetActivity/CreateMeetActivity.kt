@@ -62,10 +62,6 @@ class CreateMeetActivity : AppCompatActivity(), ActivityInitializer<ActivityCrea
     @RequiresApi(Build.VERSION_CODES.N)
     override fun setListeners() {
 
-        binding.createMeetBtn.setOnClickListener {
-            createMeeting()
-        }
-
         binding.meetingDateBtn.setOnClickListener {
 
             getDate()
@@ -202,70 +198,6 @@ class CreateMeetActivity : AppCompatActivity(), ActivityInitializer<ActivityCrea
         }
 
         addPeopleDialog!!.hide()
-    }
-
-    private fun createMeeting(){
-
-        if(!isCorrectInput()){
-
-            Toast.makeText(applicationContext,"Please input all required fields!",Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        createMeetingViewModel.createMeeting()
-        clearFields()
-
-        Toast.makeText(this,"Meeting was added successfully",Toast.LENGTH_SHORT).show()
-    }
-
-    private fun clearFields() {
-
-        binding.meetingTitleET.text.clear()
-        binding.meetingLocationET.text.clear()
-        binding.meetingDateBtn.text = "Meeting date"
-        binding.meetingTimeBtn.text = "Meeting time"
-        binding.durationET.text.clear()
-
-        isDateSet = false
-        isTimeSet = false
-    }
-
-    private fun isCorrectInput(): Boolean {
-
-        return !( binding.meetingTitleET.text.isEmpty()
-                || binding.meetingTitleET.text.isEmpty()
-                || binding.durationET.text.isEmpty()
-                || !isDateSet
-                || !isTimeSet)
-    }
-
-    private fun getMeeting() : MeetingInfo{
-
-        val title =  binding.meetingTitleET.text.toString()
-        val location =  binding.meetingLocationET.text.toString()
-        val date =  binding.meetingDateBtn.text.toString()
-        val timeStart =  binding.meetingTimeBtn.text.toString()
-        val duration =  binding.durationET.text.toString()
-        val timeEnd = getEndTime(timeStart, duration)
-
-        val meetingInfo : MeetingInfo = MeetingInfo(
-            -1,
-            title,
-            location,
-            date,
-            timeStart,
-            timeEnd,
-            attendees
-        )
-
-        return meetingInfo
-    }
-
-    private fun getEndTime(timeStart : String, duration : String) : String{
-
-        val endTime = timeStart.toInt() + duration.toInt()
-
-        return endTime.toString()
     }
 
     private fun setAttendeesViewModel(){
